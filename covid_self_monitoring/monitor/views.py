@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+from . import models
+
+
+def current_temperature(request):
+    return HttpResponse(f'Temperature: {models.Measurement.objects.last().temperature}')  # เป็นการดึงค่า temperature ที่เป็น last() ออกมาจาก db นะ
