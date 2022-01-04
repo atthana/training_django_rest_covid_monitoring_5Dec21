@@ -7,6 +7,15 @@ from .models import Measurement, Symptom
 User = get_user_model()
 
 
+# ถ้าอยากเห็น detail อะไรเพิ่ม ก็ทำ serializer ของตัวนั้นขึ้นมา
+
+class UserSerializer(serializers.ModelSerializer):  # อยากเห็น detail ของอะไรเพิ่ม ก้อทำ serializer ของคนนั้นขึ้นมา
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name']
+        # fields = '__all__'  ถ้าเอา all นะ พวก password มันจะไปด้วยนี่สิ
+
+
 class SymptomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Symptom
@@ -16,11 +25,19 @@ class SymptomSerializer(serializers.ModelSerializer):
 class MeasurementSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(default=timezone.now())
     symptoms = SymptomSerializer(many=True)
+
+    # ============= พวกนี้ทำเพิ่ม ตอนที่อ.สอน เพื่อให้เข้าใจมากขึ้นนะ ทั้งชุดนี้เลยในการ override output ที่จะพ่นออกไป ====================
+    # user = UserSerializer()  # ในนี้ที่จะพ่นออกไป เราก้อ override ไปเลย
+    # first_name = serializers.CharField(source='user.first_name', read_only=True)  # ใช้แบบนี้ก็ได้นะ เราสามารถแทรก field อะไรเข้าไปก็ได้นะ
+    # full_name = serializers.SerializerMethodField()
+    # แต่ field ที่เขียนแบบนี้จะเป็น read-only นะ หมายความว่าจะโชว์เฉพาะตอนที่เปลี่ยนจาก object เป็น json เท่านั้น
+
     # symptoms ตรงนี้เราจะ serialize มันออกไปอย่างไร ก็เอามาจาก SymptomSerializer ไง
     # เป็นการ serialize ตัว many to many ออกมา แล้วได้ทั้ง key และ value ออกมา
+
+    # def get_full_name(self, obj):
+    #     return f"{obj.user.first_name} {obj.user.last_name}"
 
     class Meta:
         model = Measurement
         fields = '__all__'
-
-
