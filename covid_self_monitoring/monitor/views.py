@@ -1,11 +1,12 @@
 import json
-from django.http import HttpResponse
-from . import models
 
-from rest_framework.response import Response
+from django.http import HttpResponse
+from rest_framework import generics
 from rest_framework.decorators import api_view  # ตัวนี้เป็น decorator ใช้สำหรับ Function based views
+from rest_framework.response import Response
 from rest_framework.views import APIView  # For Class based views.
 
+from . import models
 from .models import Measurement
 from .serializers import MeasurementSerializer
 
@@ -25,5 +26,11 @@ def all_measurement(request):
 # หลังจากนี้ไป เราจะใช้ Response ของ rest_framework ทั้งหมดนะ
 class AllMeasurementView(APIView):
     def get(self, request):  # APIView ข้างบน มันจะมี get นะ
-        serializer = MeasurementSerializer(Measurement.objects.all(), many=True)
+        serializer = MeasurementSerializer(Measurement.objects.all(), many=True)  # query ค่า แล้วก้อ serializer ออกไป
         return Response(data=serializer.data)  # พวกนี้จะ return เหมือนกับ api_view ข้างบนเลยนะ
+
+
+class MeasurementGenericsView(generics.ListAPIView):  # อันนี้มันคือการ GET ออกมานะ
+    # อย่างที่บอกนะ property ที่มันต้องการ 2 ตัวคือ queryset กับ serializer_class
+    queryset = Measurement.objects.all()  # queryset เพื่อบอกให้รู้ว่าตอนที่มันจะไปสร้าง serializer เนี่ยมันต้อง query อะไรออกมาบ้าง
+    serializer_class = MeasurementSerializer  # ตอนที่มันจะแปลงค่าจาก object ให้กลายเป็น json จะต้องใช้ serializer ตัวไหน
