@@ -30,7 +30,20 @@ class AllMeasurementView(APIView):
         return Response(data=serializer.data)  # พวกนี้จะ return เหมือนกับ api_view ข้างบนเลยนะ
 
 
-class MeasurementGenericsView(generics.ListAPIView):  # อันนี้มันคือการ GET ออกมานะ
-    # อย่างที่บอกนะ property ที่มันต้องการ 2 ตัวคือ queryset กับ serializer_class
-    queryset = Measurement.objects.all()  # queryset เพื่อบอกให้รู้ว่าตอนที่มันจะไปสร้าง serializer เนี่ยมันต้อง query อะไรออกมาบ้าง
-    serializer_class = MeasurementSerializer  # ตอนที่มันจะแปลงค่าจาก object ให้กลายเป็น json จะต้องใช้ serializer ตัวไหน
+# class MeasurementGenericsView(generics.ListAPIView):  # อันนี้มันคือการ GET ออกมานะ
+#     # อย่างที่บอกนะ property ที่มันต้องการ 2 ตัวคือ queryset กับ serializer_class
+#     queryset = Measurement.objects.all()  # queryset เพื่อบอกให้รู้ว่าตอนที่มันจะไปสร้าง serializer เนี่ยมันต้อง query อะไรออกมาบ้าง
+#     serializer_class = MeasurementSerializer  # ตอนที่มันจะแปลงค่าจาก object ให้กลายเป็น json จะต้องใช้ serializer ตัวไหน
+#
+#     def get_queryset(self):
+#         qs = super().get_queryset()
+#         qs = qs.filter(id=self.kwargs['pk'])
+#         return qs
+
+class MeasurementGenericsView(generics.RetrieveAPIView):
+    queryset = Measurement.objects.all()
+    serializer_class = MeasurementSerializer
+    lookup_field = 'id'
+    # ใส่ตรงนี้ว่าเราจะไป lookup อะไร ซึ่งคือ pk หรือ primary key นั่นแหละใน db (ใช้ id หรือ pk ก็ได้นะ Django รู้จักหมด)
+    # แต่ถ้าเราไม่ใส่ id มันจะ error นะ เพราะใน url มันบอกว่า required id ด้วย
+
