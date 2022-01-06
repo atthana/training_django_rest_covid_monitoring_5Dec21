@@ -12,5 +12,6 @@ urlpatterns = [
     path('measurement-generics-view/', views.MeasurementGenericsView.as_view()),
     # ต้องมี as_view() ด้วยนะ อย่าลืม เพราะมันเป็น class view.
 
-    path('symptom-generics-view/', views.SymptomGenericsView.as_view())
+    path('symptom-generics-view/', views.SymptomGenericsView.as_view()),
+    path('symptom-generics-view/<int:id>', views.SymptomGenericsDetailView.as_view())
 ]

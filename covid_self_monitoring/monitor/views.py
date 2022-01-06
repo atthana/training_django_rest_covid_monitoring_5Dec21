@@ -56,3 +56,9 @@ class MeasurementGenericsView(generics.ListCreateAPIView):
 class SymptomGenericsView(generics.ListCreateAPIView):
     queryset = Symptom.objects.all()
     serializer_class = SymptomSerializer
+
+
+class SymptomGenericsDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Symptom.objects.all()
+    serializer_class = SymptomSerializer
+    lookup_field = 'id'
