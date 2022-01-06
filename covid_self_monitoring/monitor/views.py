@@ -40,10 +40,14 @@ class AllMeasurementView(APIView):
 #         qs = qs.filter(id=self.kwargs['pk'])
 #         return qs
 
-class MeasurementGenericsView(generics.RetrieveAPIView):
+# class MeasurementGenericsView(generics.RetrieveAPIView):
+#     queryset = Measurement.objects.all()
+#     serializer_class = MeasurementSerializer
+#     lookup_field = 'id'
+#     # ใส่ตรงนี้ว่าเราจะไป lookup อะไร ซึ่งคือ pk หรือ primary key นั่นแหละใน db (ใช้ id หรือ pk ก็ได้นะ Django รู้จักหมด)
+#     # แต่ถ้าเราไม่ใส่ id มันจะ error นะ เพราะใน url มันบอกว่า required id ด้วย
+
+
+class MeasurementGenericsView(generics.ListCreateAPIView):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
-    lookup_field = 'id'
-    # ใส่ตรงนี้ว่าเราจะไป lookup อะไร ซึ่งคือ pk หรือ primary key นั่นแหละใน db (ใช้ id หรือ pk ก็ได้นะ Django รู้จักหมด)
-    # แต่ถ้าเราไม่ใส่ id มันจะ error นะ เพราะใน url มันบอกว่า required id ด้วย
-
