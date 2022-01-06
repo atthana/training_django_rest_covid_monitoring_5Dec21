@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView  # For Class based views.
 
 from . import models
-from .models import Measurement
-from .serializers import MeasurementSerializer
+from .models import Measurement, Symptom
+from .serializers import MeasurementSerializer, SymptomSerializer
 
 
 def current_temperature(request):
@@ -51,3 +51,8 @@ class AllMeasurementView(APIView):
 class MeasurementGenericsView(generics.ListCreateAPIView):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
+
+
+class SymptomGenericsView(generics.ListCreateAPIView):
+    queryset = Symptom.objects.all()
+    serializer_class = SymptomSerializer
