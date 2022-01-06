@@ -1,7 +1,7 @@
 import json
 
 from django.http import HttpResponse
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, permissions
 from rest_framework.decorators import api_view  # ตัวนี้เป็น decorator ใช้สำหรับ Function based views
 from rest_framework.response import Response
 from rest_framework.views import APIView  # For Class based views.
@@ -51,6 +51,9 @@ class AllMeasurementView(APIView):
 class MeasurementGenericsView(generics.ListCreateAPIView):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # นี่คือการ set permission ให้กับแต่ละ view นะ
+    # ถ้าไม่ได้ Authen จะ read ได้อย่างเดียว แต่ถ้า Authen แล้วจะ create ได้ด้วย
 
 
 class SymptomGenericsView(generics.ListCreateAPIView):
