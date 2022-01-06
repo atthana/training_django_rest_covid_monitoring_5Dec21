@@ -1,7 +1,7 @@
 import json
 
 from django.http import HttpResponse
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view  # ตัวนี้เป็น decorator ใช้สำหรับ Function based views
 from rest_framework.response import Response
 from rest_framework.views import APIView  # For Class based views.
@@ -62,3 +62,13 @@ class SymptomGenericsDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Symptom.objects.all()
     serializer_class = SymptomSerializer
     lookup_field = 'id'
+
+
+class MeasurementViewsets(viewsets.ModelViewSet):
+    queryset = Measurement.objects.all()
+    serializer_class = MeasurementSerializer  # เขียนแค่นี้เลยนะ เวลาเราเขียน ViewSets
+
+
+class SymptomViewsets(viewsets.ReadOnlyModelViewSet):  # ต้องใช้ 56, 61 ถึงจะได้เท่ากับอันนี้นะ
+    queryset = Symptom.objects.all()
+    serializer_class = SymptomSerializer
