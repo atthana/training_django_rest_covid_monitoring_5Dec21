@@ -16,8 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework_simplejwt import views as jwt_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('monitor/', include('monitor.urls'))
+    path('monitor/', include('monitor.urls')),
+
+    # มาสร้าง part เกี่ยวกับ jwt ที่ url ตัวนอกสุดเลยนะ (ไม่ได้อยู่ใน App)
+    path('api-token-auth/', jwt_views.TokenObtainPairView.as_view()),  # Part สำหรับทำ authen
+    path('api-token-refresh/', jwt_views.TokenRefreshView.as_view())  # Part สำหรับทำ refresh
 ]
