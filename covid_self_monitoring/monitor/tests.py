@@ -55,3 +55,30 @@ class TestCreateMeasurementAPI(TestCase):
         response = self.client.post(reverse('measurement-list'),
                                     data=self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
+
+
+class TestUpdateMeasurementAPI(TestCase):
+    def setUp(self):
+        self.user_1 = UserFactory()  # สร้าง user ขึ้นมา 2 คนนะ
+        self.user_2 = UserFactory()
+        self.data = {
+            'created': timezone.now(),
+            'temperature': 36.8,
+            'o2sat': 97,
+            'systolic': 124,
+            'diastolic': 90,
+            'symptoms': []
+        }
+
+    def test_update_error(self):  # เทสว่า update อันนี้ต้อง error นะ
+        client = APIClient()  # สร้าง Client ขึ้นมาในนี้
+        client.force_authenticate(user=self.user_2)  # แล้วก้อให้ client authen เป็น user2
+        measurement = MeasurementFactory(user=self.user_1)
+        # สร้าง Measurement ขึ้นมา 1 อันโดยใช้ factory และ set ให้เป็น user1
+        response = client.put(
+            reverse('measurement-detail', kwargs={'pk': measurement.id}),
+            data=self.data, format='json'
+        )
+        print('-------status-----')
+        print(response.status_code)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
