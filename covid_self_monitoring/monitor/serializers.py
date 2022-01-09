@@ -17,6 +17,8 @@ class UserSerializer(serializers.ModelSerializer):  # อยากเห็น d
 
 
 class SymptomSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
     class Meta:
         model = Symptom
         fields = '__all__'
@@ -25,6 +27,8 @@ class SymptomSerializer(serializers.ModelSerializer):
 class MeasurementSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(default=timezone.now())
     symptoms = SymptomSerializer(many=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),
+                                              default=serializers.CurrentUserDefault())
 
     # ============= พวกนี้ทำเพิ่ม ตอนที่อ.สอน เพื่อให้เข้าใจมากขึ้นนะ ทั้งชุดนี้เลยในการ override output ที่จะพ่นออกไป ====================
     # user = UserSerializer()  # ในนี้ที่จะพ่นออกไป เราก้อ override ไปเลย
@@ -41,3 +45,17 @@ class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = '__all__'
+
+    def create(self, validated_data):
+        symptoms = validated_data.pop('symptoms')  # ดึง symptoms ออกมาข้างนอกก่อน ไม่สนใจมัน
+        measurement = Measurement.objects.create(**validated_data)
+        measurement.symptoms.set(Symptom.objects.filter(id__in=[s['id'] for s in symptoms]))
+        # แล้วค่อยไป set symptoms เข้าไปทีหลังอีกที
+        # set() ใช้สำหรับ add ค่าให้กับ many to many field
+        return measurement
+
+    def update(self, instance, validated_data):
+        symptoms = validated_data.pop('symptoms')
+        measurement = super().update(instance, validated_data)
+        measurement.symptoms.set(Symptom.objects.filter(id__in=[s['id'] for s in symptoms]))
+        return measurement
