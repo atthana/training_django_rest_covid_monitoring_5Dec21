@@ -42,6 +42,11 @@ class MeasurementSerializer(serializers.ModelSerializer):
     # def get_full_name(self, obj):
     #     return f"{obj.user.first_name} {obj.user.last_name}"
 
+    def validate_temperature(self, data):  # data ตรงนี้คือ data ของ temperature นะ
+        if data < 30 or data > 50:
+            raise serializers.ValidationError('Unreasonable temperature')
+        return data  # เขียนแค่นี้มันจะ auto validate ให้เราเองเลยนะ
+
     class Meta:
         model = Measurement
         fields = '__all__'
