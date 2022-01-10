@@ -71,6 +71,9 @@ class MeasurementViewsets(viewsets.ModelViewSet):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer  # เขียนแค่นี้เลยนะ เวลาเราเขียน ViewSets
 
+    filterset_fields = ('user__id', 'user__username')
+    # ทำแบบนี้จะทำให้ api viewset ตัวนี้สามารถ filter ได้ด้วย user__id, user__username
+
 
 class SymptomViewsets(viewsets.ReadOnlyModelViewSet):  # ต้องใช้ 56, 61 ถึงจะได้เท่ากับอันนี้นะ
     queryset = Symptom.objects.all()
