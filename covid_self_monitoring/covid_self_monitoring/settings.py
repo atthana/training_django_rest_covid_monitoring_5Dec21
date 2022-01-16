@@ -29,6 +29,11 @@ ALLOWED_HOSTS = ['*']
 
 SHELL_PLUS = 'ipython'
 
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # ต้องเป็น True หรือ False นะ (แบบอนุญาตจากทุก origin เลยไหม)
+CORS_ALLOWED_ORIGINS = [
+    "https://selfmonitoring.tailor-solutions.com",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,6 +48,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'drf_yasg',
     'django_filters',
+    'corsheaders',
 
     'monitor',
 ]
@@ -50,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
